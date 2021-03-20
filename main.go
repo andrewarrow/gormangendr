@@ -24,6 +24,7 @@ func main() {
 	command := os.Args[1]
 
 	if command == "handshake" {
+		Handshake(os.Args[2])
 	} else if command == "help" {
 		PrintHelp()
 	}
