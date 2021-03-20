@@ -25,7 +25,7 @@ func main() {
 	command := os.Args[1]
 
 	if command == "handshake" {
-		Handshake(os.Args[2])
+		HandshakeMany()
 	} else if command == "relays" {
 		LoadRelays()
 	} else if command == "help" {

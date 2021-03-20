@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+func HandshakeMany() {
+	list := LoadRelays()
+	for i, item := range list {
+		fmt.Println(i, item)
+		Handshake(item)
+	}
+}
 func Handshake(host string) {
 	fmt.Println("trying", host)
 	d := net.Dialer{Timeout: time.Second * 6}
