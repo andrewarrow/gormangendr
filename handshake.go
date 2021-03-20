@@ -22,4 +22,10 @@ func Handshake(host string) {
 	n, err := conn.Read(tmp)
 	fmt.Println("trying4", host)
 	fmt.Println(n, err, tmp)
+	conn.Write([]byte{244, 185, 165, 64, 0, 5, 0, 2, 129, 0})
+
+	tmp = make([]byte, 256)
+	n, err = conn.Read(tmp)
+	fmt.Println("trying5", host)
+	fmt.Println(n, err, tmp)
 }
