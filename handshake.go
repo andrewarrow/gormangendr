@@ -46,25 +46,18 @@ func Handshake(host string) {
 	fmt.Println("trying2", host)
 	defer conn.Close()
 
-	miniProtocol := multiplex.MiniProtocolIDMuxControl
-	sdu := multiplex.NewServiceDataUnit(miniProtocol, multiplex.MessageModeInitiator, handshakeRequest())
+	queryNode(conn, multiplex.MiniProtocolIDMuxControl, handshakeRequest())
+
+	chainSyncRequest := cbor.NewArray()
+	chainSyncRequest.Add(cbor.NewPositiveInteger(0))
+	queryNode(conn, multiplex.MiniProtocolIDChainSyncBlocks, []cbor.DataItem{chainSyncRequest})
+}
+
+func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []cbor.DataItem) {
+	sdu := multiplex.NewServiceDataUnit(miniProtocol, multiplex.MessageModeInitiator, dataItems)
 	fmt.Println(sdu.Bytes())
 	conn.Write(sdu.Bytes())
 	tmp := make([]byte, 39)
 	conn.Read(tmp)
-	fmt.Println("trying4", tmp)
-
-	/*
-		conn.Write([]byte{48, 221, 75, 88, 0, 0, 0, 17, 130, 0, 162, 1, 26, 45, 150, 74, 9, 25, 128, 2, 26, 45, 150, 74, 9})
-		fmt.Println("trying3", host)
-		tmp := make([]byte, 256)
-		n, err := conn.Read(tmp)
-		fmt.Println("trying4", host)
-		fmt.Println(n, err, tmp)
-		conn.Write([]byte{244, 185, 165, 64, 0, 5, 0, 2, 129, 0})
-
-		tmp = make([]byte, 256)
-		n, err = conn.Read(tmp)
-		fmt.Println("trying5", host)
-		fmt.Println(n, err, tmp)*/
+	fmt.Println("trying", tmp)
 }
