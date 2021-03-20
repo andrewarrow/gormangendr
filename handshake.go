@@ -57,7 +57,30 @@ func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []c
 	sdu := multiplex.NewServiceDataUnit(miniProtocol, multiplex.MessageModeInitiator, dataItems)
 	fmt.Println(sdu.Bytes())
 	conn.Write(sdu.Bytes())
-	tmp := make([]byte, 39)
-	conn.Read(tmp)
-	fmt.Println("trying", tmp)
+	response := []byte{}
+	for {
+		fmt.Println("h1", len(response))
+		bytesHeader := make([]byte, multiplex.HeaderSize)
+		conn.Read(bytesHeader)
+		fmt.Println("header", bytesHeader, len(bytesHeader))
+		header, err := multiplex.ParseHeader(bytesHeader)
+		fmt.Println("header", header, err)
+
+		response = append(response, header.Bytes()...)
+		totalReadBytes := 0
+		for totalReadBytes < header.PayloadLengthAsInt32() {
+			buf := make([]byte, header.PayloadLengthAsInt32()-totalReadBytes)
+			fmt.Println("buf", len(buf), header.PayloadLengthAsInt32())
+			readBytes, _ := conn.Read(buf)
+			response = append(response, buf[:readBytes]...)
+			totalReadBytes += readBytes
+		}
+		fmt.Println("buf2", header.PayloadLength(), multiplex.MaxSDUSize)
+		if int(header.PayloadLength()) != multiplex.MaxSDUSize {
+			break
+		}
+	}
+	sdus, _ := multiplex.ParseServiceDataUnits(response)
+	fmt.Println(sdus[0].Debug())
+	fmt.Println("r", len(sdus), response)
 }
