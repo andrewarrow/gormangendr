@@ -49,6 +49,10 @@ func Handshake(host string) {
 	miniProtocol := multiplex.MiniProtocolIDMuxControl
 	sdu := multiplex.NewServiceDataUnit(miniProtocol, multiplex.MessageModeInitiator, handshakeRequest())
 	fmt.Println(sdu.Bytes())
+	conn.Write(sdu.Bytes())
+	tmp := make([]byte, 39)
+	conn.Read(tmp)
+	fmt.Println("trying4", tmp)
 
 	/*
 		conn.Write([]byte{48, 221, 75, 88, 0, 0, 0, 17, 130, 0, 162, 1, 26, 45, 150, 74, 9, 25, 128, 2, 26, 45, 150, 74, 9})
