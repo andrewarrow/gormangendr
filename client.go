@@ -12,12 +12,11 @@ import (
 
 func ClientConnect(port string) {
 	fmt.Println("0")
-	conn, err := grpc.Dial(port, grpc.WithTimeout(5*time.Second), grpc.WithInsecure())
+	conn, err := grpc.Dial(port, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		return
 	}
-	fmt.Println(conn)
 	defer conn.Close()
 	c := network.NewNodeClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

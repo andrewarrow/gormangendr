@@ -12,6 +12,9 @@ func HandshakeMany() {
 	list := LoadRelays()
 	for i, item := range list {
 		fmt.Println(i, item)
+		if i == 0 {
+			continue
+		}
 		Handshake(item)
 	}
 }
@@ -36,7 +39,7 @@ func handshakeRequest() []cbor.DataItem {
 
 func Handshake(host string) {
 	fmt.Println("trying", host)
-	go ClientConnect(host)
+	ClientConnect(host)
 }
 
 func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []cbor.DataItem) *multiplex.ServiceDataUnit {
