@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"gormangendr/simple"
 	"log"
-	"time"
 )
 
 func ClientConnect(port string) {
@@ -19,15 +17,11 @@ func ClientConnect(port string) {
 }
 func HandleClient(conn *simple.ClientConn) {
 	nc := simple.NewNodeClient(conn)
-	context.WithTimeout(context.Background(), time.Second*100)
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second*100)
 	fmt.Println("2", nc)
-	/*
-		defer cancel()
-			r, err := nc.Handshake(ctx, &network.HandshakeRequest{})
-			if err != nil {
-				log.Fatalf("could not: %v", err)
-			}
-			fmt.Println("|", r.Version, r.Block0, r.NodeId, r.Signature, r.Nonce)
-			fmt.Println("3")*/
+	r, err := nc.Handshake(simple.HandshakeRequest{})
+	if err != "" {
+		log.Fatalf("could not: %v", err)
+	}
+	fmt.Println("|", r.Version, r.Block0, r.NodeId, r.Signature, r.Nonce)
+	fmt.Println("3")
 }
