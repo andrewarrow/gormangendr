@@ -16,7 +16,7 @@ type ClientConn struct {
 	conn net.Conn
 }
 
-func (cc *ClientConn) Write(b []byte) {
+func (cc *ClientConn) Write(flavor string, b []byte) interface{} {
 	fmt.Println("write bytes", b)
 	n, err := cc.conn.Write(b)
 	fmt.Println("n", n, err)
@@ -35,10 +35,17 @@ func (cc *ClientConn) Write(b []byte) {
 	psduInput = append(psduInput, bytesHeader...)
 	psduInput = append(psduInput, buff[:n]...)
 	sdus, _ := multiplex.ParseServiceDataUnits(psduInput)
-	arr := sdus[0].DataItems()[0].(*cbor.Array)
-	for _, a := range arr.V {
-		fmt.Printf("%+v\n", a)
+	var returnVal interface{}
+	if flavor == "HandshakeResponse" {
+		hsr := HandshakeResponse{}
+		arr := sdus[0].DataItems()[0].(*cbor.Array)
+		hsr.Version = arr.Get(1).(*cbor.PositiveInteger8).ValueAsUint16()
+		hsr.ExtraParam = arr.Get(2).(*cbor.PositiveInteger32).ValueAsUint32()
+		returnVal = hsr
+	} else if flavor == "ClientAuthResponse" {
+		returnVal = ClientAuthResponse{}
 	}
+	return returnVal
 }
 
 func Dial(target string, opts ...DialOption) (*ClientConn, string) {

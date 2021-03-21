@@ -22,6 +22,6 @@ func HandleClient(conn *simple.ClientConn) {
 	if err != "" {
 		log.Fatalf("could not: %v", err)
 	}
-	fmt.Println("|", r.Version, r.Block0, r.NodeId, r.Signature, r.Nonce)
+	fmt.Println("|", r.Version, r.ExtraParam)
 	fmt.Println("3")
 }

@@ -10,17 +10,13 @@ func (hr *HandshakeRequest) Bytes() []byte {
 }
 
 type HandshakeResponse struct {
-	Version   int
-	Block0    string
-	NodeId    string
-	Signature []byte
-	Nonce     []byte
+	Version    uint16
+	ExtraParam uint32
 }
 
 func (nc *NodeClient) Handshake(req HandshakeRequest) (HandshakeResponse, string) {
-	res := HandshakeResponse{}
-	nc.conn.Write(req.Bytes())
-	return res, ""
+	res := nc.conn.Write("HandshakeResponse", req.Bytes())
+	return res.(HandshakeResponse), ""
 }
 
 type NodeClient struct {
