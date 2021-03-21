@@ -33,7 +33,7 @@ func main() {
 	if command == "handshake" {
 		HandshakeMany()
 	} else if command == "connect" {
-		Handshake(os.Args[2])
+		ClientConnect(os.Args[2])
 	} else if command == "relays" {
 		LoadRelays()
 	} else if command == "client" {

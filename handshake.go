@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net"
-	"time"
 
 	"github.com/gocardano/go-cardano-client/cbor"
 	"github.com/gocardano/go-cardano-client/multiplex"
@@ -37,20 +36,7 @@ func handshakeRequest() []cbor.DataItem {
 
 func Handshake(host string) {
 	fmt.Println("trying", host)
-	d := net.Dialer{Timeout: time.Second * 6}
-	conn, err := d.Dial("tcp", host)
-	if err != nil {
-		fmt.Println("dial error:", err)
-		return
-	}
-	defer conn.Close()
-
-	queryNode(conn, multiplex.MiniProtocolIDMuxControl, handshakeRequest())
-
-	chainSyncRequest := cbor.NewArray()
-	chainSyncRequest.Add(cbor.NewPositiveInteger(0))
-	messageResponse := queryNode(conn, multiplex.MiniProtocolIDChainSyncBlocks, []cbor.DataItem{chainSyncRequest})
-	fmt.Println(messageResponse.Debug())
+	ClientConnect(host)
 }
 
 func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []cbor.DataItem) *multiplex.ServiceDataUnit {
