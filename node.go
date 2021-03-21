@@ -25,14 +25,20 @@ type Node struct {
 
 func NewNode(genesisBlockHash string) *Node {
 	n := Node{}
-	go n.StartRestService()
 	go n.PrepareBlock0(genesisBlockHash)
 	return &n
 }
 
 func (n *Node) Bootstrap() {
-	n.State = "StartingWorkers"
+	n.State = "StartingBoot"
+	go n.StartRestService()
 	n.Explorer = "thing"
+	for {
+		time.Sleep(time.Second * 1)
+		if n.State == "BootDone" {
+			break
+		}
+	}
 }
 func (n *Node) PrepareBlock0(genesisBlockHash string) {
 	fmt.Println("prepare")
@@ -40,6 +46,8 @@ func (n *Node) PrepareBlock0(genesisBlockHash string) {
 	//  let (blockchain, blockchain_tip) =
 	//  start_up::load_blockchain(block0, storage, cache_capacity, settings.rewards_report_all)
 	n.Blockchain = NewBlockchain(genesisBlockHash)
+	fmt.Println("bc ready")
+	n.State = "BootDone"
 }
 func (n *Node) StartRestService() {
 	for {
@@ -48,6 +56,7 @@ func (n *Node) StartRestService() {
 	}
 }
 func (n *Node) StartServices() {
+	n.State = "StartingWorkers"
 	for {
 		fmt.Println("hi")
 		time.Sleep(time.Second * 1)
