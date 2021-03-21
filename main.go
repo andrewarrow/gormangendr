@@ -12,6 +12,8 @@ func PrintHelp() {
 	fmt.Println("  gormangendr help         # this menu")
 	fmt.Println("  gormangendr handshake    # test network connection")
 	fmt.Println("  gormangendr relays       # load mainnet relays")
+	fmt.Println("  gormangendr connect      #")
+	fmt.Println("  gormangendr node         #")
 	fmt.Println("")
 }
 
@@ -26,8 +28,20 @@ func main() {
 
 	if command == "handshake" {
 		HandshakeMany()
+	} else if command == "connect" {
+		Handshake(os.Args[2])
 	} else if command == "relays" {
 		LoadRelays()
+	} else if command == "node" {
+		node := NewNode()
+		fmt.Println("New Node...")
+		node.Bootstrap()
+		fmt.Println("Bootstrapped.")
+		go node.StartServices()
+		fmt.Println("Services running...")
+		for {
+			time.Sleep(time.Second * 1)
+		}
 	} else if command == "help" {
 		PrintHelp()
 	}
