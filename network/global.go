@@ -7,6 +7,11 @@ import (
 	"google.golang.org/grpc"
 )
 
+//channels
+//pub client_box: MessageBox<ClientMsg>,
+//pub transaction_box: MessageBox<TransactionMsg>,
+//pub block_box: MessageBox<BlockMsg>,
+
 type GlobalState struct {
 	/*block0_hash: HeaderHash,
 	  config: Configuration,
