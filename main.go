@@ -13,7 +13,7 @@ func PrintHelp() {
 	fmt.Println("  gormangendr handshake    # test network connection")
 	fmt.Println("  gormangendr relays       # load mainnet relays")
 	fmt.Println("  gormangendr connect      #")
-	fmt.Println("  gormangendr node         #")
+	fmt.Println("  gormangendr node         # --genesis-block-hash")
 	fmt.Println("")
 }
 
@@ -26,6 +26,7 @@ func main() {
 	}
 	command := os.Args[1]
 
+	argMap = argsToMap()
 	if command == "handshake" {
 		HandshakeMany()
 	} else if command == "connect" {
@@ -33,6 +34,7 @@ func main() {
 	} else if command == "relays" {
 		LoadRelays()
 	} else if command == "node" {
+		EnsureParamPass("genesis-block-hash")
 		node := NewNode()
 		fmt.Println("New Node...")
 		node.Bootstrap()
