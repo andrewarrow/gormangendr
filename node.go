@@ -43,7 +43,7 @@ func (n *Node) Bootstrap() {
 }
 func (n *Node) PrepareBlock0(genesisBlockHash string) {
 	fmt.Println("prepare")
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 1)
 	//  let (blockchain, blockchain_tip) =
 	//  start_up::load_blockchain(block0, storage, cache_capacity, settings.rewards_report_all)
 	n.Blockchain = NewBlockchain(genesisBlockHash)
@@ -52,7 +52,7 @@ func (n *Node) PrepareBlock0(genesisBlockHash string) {
 }
 func (n *Node) StartRestService() {
 	for {
-		fmt.Println("rest")
+		//fmt.Println("rest")
 		time.Sleep(time.Second * 1)
 	}
 }
