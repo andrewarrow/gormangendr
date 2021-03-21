@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"gormangendr/network"
 	"log"
 	"time"
@@ -16,13 +17,13 @@ func ClientConnect(port string) {
 		return
 	}
 	defer conn.Close()
-	c := network.NewGreeterClient(conn)
+	c := network.NewNodeClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.SayHello(ctx, &network.HelloRequest{Name: "name"})
+	r, err := c.Handshake(ctx, &network.HandshakeRequest{})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
+	fmt.Println(r)
 
 }
