@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gormangendr/network"
 	"math/rand"
 	"os"
 	"time"
@@ -39,7 +40,7 @@ func main() {
 		ClientConnect(port)
 	} else if command == "node" {
 		EnsureParamPass("genesis-block-hash")
-		node := NewNode(argMap["genesis-block-hash"])
+		node := network.NewNode(argMap["genesis-block-hash"])
 		fmt.Println("New Node...")
 		node.Bootstrap()
 		fmt.Println("Bootstrapped.")
