@@ -35,7 +35,7 @@ func main() {
 		LoadRelays()
 	} else if command == "node" {
 		EnsureParamPass("genesis-block-hash")
-		node := NewNode()
+		node := NewNode(argMap["genesis-block-hash"])
 		fmt.Println("New Node...")
 		node.Bootstrap()
 		fmt.Println("Bootstrapped.")

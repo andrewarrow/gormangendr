@@ -18,15 +18,15 @@ type Node struct {
 	//  rest_context: Option<rest::ContextLock>,
 	//  services: Services,
 
-	Blockchain string
+	Blockchain *Blockchain
 	State      string
 	Explorer   string
 }
 
-func NewNode() *Node {
+func NewNode(genesisBlockHash string) *Node {
 	n := Node{}
 	go n.StartRestService()
-	go n.PrepareBlock0()
+	go n.PrepareBlock0(genesisBlockHash)
 	return &n
 }
 
@@ -34,12 +34,12 @@ func (n *Node) Bootstrap() {
 	n.State = "StartingWorkers"
 	n.Explorer = "thing"
 }
-func (n *Node) PrepareBlock0() {
+func (n *Node) PrepareBlock0(genesisBlockHash string) {
 	fmt.Println("prepare")
 	time.Sleep(time.Second * 10)
 	//  let (blockchain, blockchain_tip) =
 	//  start_up::load_blockchain(block0, storage, cache_capacity, settings.rewards_report_all)
-	n.Blockchain = "thing"
+	n.Blockchain = NewBlockchain(genesisBlockHash)
 }
 func (n *Node) StartRestService() {
 	for {
