@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/gocardano/go-cardano-client/cbor"
 	"github.com/gocardano/go-cardano-client/multiplex"
@@ -12,10 +13,15 @@ func HandshakeMany() {
 	list := LoadRelays()
 	for i, item := range list {
 		fmt.Println(i, item)
-		if i == 0 {
+		if i < 4 {
 			continue
 		}
 		Handshake(item)
+		break
+	}
+
+	for {
+		time.Sleep(time.Second * 1)
 	}
 }
 

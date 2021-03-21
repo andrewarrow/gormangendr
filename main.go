@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gormangendr/network"
+	"gormangendr/simple"
 	"math/rand"
 	"os"
 	"time"
@@ -34,8 +35,18 @@ func main() {
 		HandshakeMany()
 	} else if command == "connect" {
 		ClientConnect(os.Args[2])
+		for {
+			time.Sleep(time.Second * 1)
+		}
 	} else if command == "relays" {
 		LoadRelays()
+	} else if command == "generate" {
+		if argMap["go-grpc_out"] != "" {
+			simple.GenerateFuncRPC(argMap["go-grpc_out"], os.Args[2])
+		}
+		if argMap["go_out"] != "" {
+			simple.GenerateModelRPC(argMap["go_out"], os.Args[2])
+		}
 	} else if command == "client" {
 		ClientConnect(port)
 	} else if command == "node" {
