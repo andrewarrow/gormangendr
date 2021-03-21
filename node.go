@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gormangendr/network"
 	"time"
 )
 
@@ -57,8 +58,5 @@ func (n *Node) StartRestService() {
 }
 func (n *Node) StartServices() {
 	n.State = "StartingWorkers"
-	for {
-		fmt.Println("hi")
-		time.Sleep(time.Second * 1)
-	}
+	network.Start()
 }
