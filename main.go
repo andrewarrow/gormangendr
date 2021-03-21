@@ -17,6 +17,7 @@ func PrintHelp() {
 	fmt.Println("  gormangendr connect      #")
 	fmt.Println("  gormangendr node         # --genesis-block-hash")
 	fmt.Println("  gormangendr client       # ")
+	fmt.Println("  gormangendr generate     # ")
 	fmt.Println("")
 }
 
@@ -41,12 +42,8 @@ func main() {
 	} else if command == "relays" {
 		LoadRelays()
 	} else if command == "generate" {
-		if argMap["go-grpc_out"] != "" {
-			simple.GenerateFuncRPC(argMap["go-grpc_out"], os.Args[2])
-		}
-		if argMap["go_out"] != "" {
-			simple.GenerateModelRPC(argMap["go_out"], os.Args[2])
-		}
+		EnsureParamPass("proto-file")
+		simple.GenerateRPC(argMap["proto-file"])
 	} else if command == "client" {
 		ClientConnect(port)
 	} else if command == "node" {
