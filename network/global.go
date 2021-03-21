@@ -33,7 +33,7 @@ func NetworkStart(port string) {
 		return
 	}
 	s := grpc.NewServer()
-	RegisterGreeterServer(s, &NodeService{})
+	RegisterNodeServer(s, &GendrNodeServer{})
 	/*
 
 			struct InboundSubscriptions {
