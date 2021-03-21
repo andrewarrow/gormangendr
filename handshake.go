@@ -36,7 +36,7 @@ func handshakeRequest() []cbor.DataItem {
 
 func Handshake(host string) {
 	fmt.Println("trying", host)
-	ClientConnect(host)
+	go ClientConnect(host)
 }
 
 func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []cbor.DataItem) *multiplex.ServiceDataUnit {

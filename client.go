@@ -12,7 +12,7 @@ import (
 
 func ClientConnect(port string) {
 	fmt.Println("0")
-	conn, err := grpc.Dial(port, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(port, grpc.WithTimeout(5*time.Second), grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 		return
@@ -27,7 +27,7 @@ func ClientConnect(port string) {
 	if err != nil {
 		log.Fatalf("could not: %v", err)
 	}
-	fmt.Println(r)
+	fmt.Println("|", r.Version, r.Block0, r.NodeId, r.Signature, r.Nonce)
 	fmt.Println("3")
 
 }
