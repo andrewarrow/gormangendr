@@ -1,19 +1,34 @@
 package simple
 
-import "context"
+import (
+	"fmt"
+	"net"
+	"time"
+)
 
 type DialOption struct {
 	Thing string
 }
 type ClientConn struct {
-	ctx    context.Context
-	cancel context.CancelFunc
+	conn net.Conn
 }
 
-func DialContext(ctx context.Context, target string, opts ...DialOption) (conn *ClientConn, err error) {
-	return nil, nil
+func (cc *ClientConn) Write(b []byte) {
+	fmt.Println("write bytes", b)
+	n, err := cc.conn.Write(b)
+	fmt.Println("n", n, err)
+	bytesHeader := make([]byte, 8)
+	cc.conn.Read(bytesHeader)
+	fmt.Println("bytesHeader", bytesHeader)
 }
 
-func Dial(target string, opts ...DialOption) (*ClientConn, error) {
-	return DialContext(context.Background(), target, opts...)
+func Dial(target string, opts ...DialOption) (*ClientConn, string) {
+	d := net.Dialer{Timeout: time.Second * 6}
+	conn, err := d.Dial("tcp", target)
+	if err != nil {
+		fmt.Println("dial error:", err)
+		return nil, err.Error()
+	}
+	cc := ClientConn{conn}
+	return &cc, ""
 }

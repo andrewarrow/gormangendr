@@ -53,7 +53,7 @@ func queryNode(conn net.Conn, miniProtocol multiplex.MiniProtocol, dataItems []c
 	conn.Write(sdu.Bytes())
 	response := []byte{}
 	for {
-		bytesHeader := make([]byte, multiplex.HeaderSize)
+		bytesHeader := make([]byte, 8)
 		conn.Read(bytesHeader)
 		header, _ := multiplex.ParseHeader(bytesHeader)
 

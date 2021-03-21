@@ -6,10 +6,10 @@ import (
 	"log"
 )
 
-func ClientConnect(port string) {
+func ClientConnect(target string) {
 	fmt.Println("0")
-	conn, err := simple.Dial(port)
-	if err != nil {
+	conn, err := simple.Dial(target)
+	if err != "" {
 		log.Fatalf("did not connect: %v", err)
 		return
 	}
@@ -18,7 +18,7 @@ func ClientConnect(port string) {
 func HandleClient(conn *simple.ClientConn) {
 	nc := simple.NewNodeClient(conn)
 	fmt.Println("2", nc)
-	r, err := nc.Handshake(simple.HandshakeRequest{})
+	r, err := nc.Handshake(simple.HandshakeRequest{Nonce: []byte{1, 2, 4}})
 	if err != "" {
 		log.Fatalf("could not: %v", err)
 	}
