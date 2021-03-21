@@ -38,7 +38,7 @@ func Start(port string) {
 		return
 	}
 	s := grpc.NewServer()
-	//pb.RegisterGreeterServer(s, &server{})
+	RegisterGreeterServer(s, &NodeService{})
 	err = s.Serve(lis)
 	if err != nil {
 		log.Fatalf("failed to serve: %v", err)
