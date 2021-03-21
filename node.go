@@ -56,7 +56,7 @@ func (n *Node) StartRestService() {
 		time.Sleep(time.Second * 1)
 	}
 }
-func (n *Node) StartServices() {
+func (n *Node) StartServices(port string) {
 	n.State = "StartingWorkers"
-	network.Start()
+	network.Start(port)
 }

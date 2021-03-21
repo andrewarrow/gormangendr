@@ -1,8 +1,10 @@
 package network
 
 import (
-	"fmt"
-	"time"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
 )
 
 type GlobalState struct {
@@ -24,11 +26,19 @@ func NewGlobalState() *GlobalState {
 type ConnectionState struct {
 }
 
-func Start() {
-	for {
-		fmt.Println("socket server")
-		time.Sleep(time.Second * 1)
+func Start(port string) {
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+		return
 	}
+	s := grpc.NewServer()
+	//pb.RegisterGreeterServer(s, &server{})
+	err = s.Serve(lis)
+	if err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+
 }
 
 //Protocol::Grpc

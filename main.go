@@ -39,7 +39,7 @@ func main() {
 		fmt.Println("New Node...")
 		node.Bootstrap()
 		fmt.Println("Bootstrapped.")
-		go node.StartServices()
+		go node.StartServices(":3000")
 		fmt.Println("Services running...")
 		for {
 			time.Sleep(time.Second * 1)
