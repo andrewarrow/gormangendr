@@ -1,8 +1,16 @@
 package simple
 
 type ClientAuthRequest struct {
+	// Node ID of the client, the public key of a key pair.
+	NodeId []byte
+	// Signature of the server's nonce sent in HandshakeResponse,
+	// using the private key in the client's key pair.
 	Signature []byte
-	Nonce     []byte
+}
+
+func NewClientAuthRequest() ClientAuthRequest {
+	car := ClientAuthRequest{}
+	return car
 }
 
 func (hr *ClientAuthRequest) Bytes() []byte {
@@ -13,8 +21,7 @@ func (hr *ClientAuthRequest) Bytes() []byte {
 type ClientAuthResponse struct {
 }
 
-func (nc *NodeClient) ClientAuth(req ClientAuthRequest) (ClientAuthResponse, string) {
-	res := ClientAuthResponse{}
-	nc.conn.Write("ClientAuthResponse", req.Bytes())
-	return res, ""
+func (nc *NodeClient) ClientAuth(nodeId, sig []byte) (ClientAuthResponse, string) {
+	res := nc.conn.Write("ClientAuthResponse", []byte{})
+	return res.(ClientAuthResponse), ""
 }

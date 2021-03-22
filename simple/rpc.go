@@ -1,6 +1,7 @@
 package simple
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 	"time"
@@ -40,7 +41,13 @@ func (cc *ClientConn) Write(flavor string, b []byte) interface{} {
 		hsr := HandshakeResponse{}
 		arr := sdus[0].DataItems()[0].(*cbor.Array)
 		hsr.Version = arr.Get(1).(*cbor.PositiveInteger8).ValueAsUint16()
-		hsr.ExtraParam = arr.Get(2).(*cbor.PositiveInteger32).ValueAsUint32()
+		hsr.ExtraParams = arr.Get(2).(*cbor.PositiveInteger32).ValueAsUint32()
+		bs := make([]byte, 4)
+		binary.LittleEndian.PutUint32(bs, uint32(hsr.ExtraParams))
+		hsr.Block0 = bs[0]
+		hsr.NodeId = bs[1]
+		hsr.Signature = bs[2]
+		hsr.Nounce = bs[4]
 		returnVal = hsr
 	} else if flavor == "ClientAuthResponse" {
 		returnVal = ClientAuthResponse{}

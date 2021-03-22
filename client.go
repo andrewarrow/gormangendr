@@ -22,6 +22,10 @@ func HandleClient(conn *simple.ClientConn) {
 	if err != "" {
 		log.Fatalf("could not: %v", err)
 	}
-	fmt.Println("|", r.Version, r.ExtraParam)
+	fmt.Println("|", r.Version, r.ExtraParams)
 	fmt.Println("3")
+
+	//nodeId := ReadPublicKey()
+	//nc.ClientAuth(nodeId, sig)
+	//&request.node_id, &request.signature
 }

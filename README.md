@@ -9,4 +9,8 @@ protoc --go_out="/Users/aa/" service.proto
 protoc --go-grpc_out="/Users/aa/" service.proto
 
 
-GRPC_GO_LOG_SEVERITY_LEVEL=99 GRPC_GO_LOG_SEVERITY_LEVEL=info GRPC_GO_REQUIRE_HANDSHAKE=off ./gormangendr handshake
+./jcli key generate --type=Ed25519Extended > receiver_secret.key
+cat receiver_secret.key | ./jcli key to-public > receiver_public.key
+
+./jcli address account --testing --prefix addr $(cat receiver_public.key)
+

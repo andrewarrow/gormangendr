@@ -10,8 +10,12 @@ func (hr *HandshakeRequest) Bytes() []byte {
 }
 
 type HandshakeResponse struct {
-	Version    uint16
-	ExtraParam uint32
+	Version     uint16
+	ExtraParams uint32
+	Block0      byte
+	NodeId      byte
+	Signature   byte
+	Nonce       byte
 }
 
 func (nc *NodeClient) Handshake(req HandshakeRequest) (HandshakeResponse, string) {
