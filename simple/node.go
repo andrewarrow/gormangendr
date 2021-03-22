@@ -1,5 +1,9 @@
 package simple
 
+import (
+	"math/rand"
+)
+
 type HandshakeRequest struct {
 	Nonce []byte
 }
@@ -18,7 +22,12 @@ type HandshakeResponse struct {
 	Nonce       byte
 }
 
-func (nc *NodeClient) Handshake(req HandshakeRequest) (HandshakeResponse, string) {
+func (nc *NodeClient) Handshake() (HandshakeResponse, string) {
+	req := HandshakeRequest{}
+	req.Nonce = []byte{}
+	for i := 0; i < 32; i++ {
+		req.Nonce = append(req.Nonce, byte(rand.Intn(256)))
+	}
 	res := nc.conn.Write("HandshakeResponse", req.Bytes())
 	return res.(HandshakeResponse), ""
 }

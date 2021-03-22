@@ -47,7 +47,7 @@ func (cc *ClientConn) Write(flavor string, b []byte) interface{} {
 		hsr.Block0 = bs[0]
 		hsr.NodeId = bs[1]
 		hsr.Signature = bs[2]
-		hsr.Nounce = bs[4]
+		hsr.Nonce = bs[4]
 		returnVal = hsr
 	} else if flavor == "ClientAuthResponse" {
 		returnVal = ClientAuthResponse{}
