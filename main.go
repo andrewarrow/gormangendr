@@ -15,6 +15,7 @@ func PrintHelp() {
 	fmt.Println("  gormangendr handshake    # test network connection")
 	fmt.Println("  gormangendr relays       # load mainnet relays")
 	fmt.Println("  gormangendr connect      #")
+	fmt.Println("  gormangendr digitalocean #")
 	fmt.Println("  gormangendr node         # --genesis-block-hash")
 	fmt.Println("  gormangendr client       # ")
 	fmt.Println("  gormangendr generate     # ")
@@ -41,6 +42,8 @@ func main() {
 		}
 	} else if command == "relays" {
 		LoadRelays()
+	} else if command == "digitalocean" {
+		DigitalOcean()
 	} else if command == "generate" {
 		EnsureParamPass("proto-file")
 		simple.GenerateRPC(argMap["proto-file"])
