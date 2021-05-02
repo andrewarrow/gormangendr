@@ -7,19 +7,30 @@ import (
 )
 
 type Address struct {
-	Val string
+	Id    string
+	Value int64
 }
 
 func NewAddress() Address {
 	a := Address{}
 	b := make([]byte, 16)
 	rand.Read(b)
-	a.Val = fmt.Sprintf("%X", b)
+	a.Id = fmt.Sprintf("%X", b)
+	return a
+}
+func NewAddressWithValue(id string, value int64) Address {
+	a := NewAddress()
+	a.Id = id
+	a.Value = value
 	return a
 }
 
+func (a *Address) AssociatedFund() string {
+	return "AssociatedFund"
+}
+
 type Config struct {
-	Txs          []Tx
+	Addresses    []Address
 	TrustedPeers []string
 	BlockHash    string
 }
@@ -30,15 +41,20 @@ func NewConfig() *Config {
 	return &c
 }
 
+func (c *Config) Block0UtxoForAddress(sender *Address) Address {
+	a := NewAddress()
+	return a
+}
+
 func (c *Config) GenesisBlockHash() string {
 	return "ABC"
 }
 func (c *Config) AddTrustedPeer(tp string) {
 	c.TrustedPeers = append(c.TrustedPeers, tp)
 }
-func ConfigWithFunds(txs []Tx) *Config {
+func ConfigWithFunds(adx []Address) *Config {
 	c := Config{}
-	c.Txs = txs
+	c.Addresses = adx
 	return &c
 }
 
@@ -47,25 +63,16 @@ type Tx struct {
 	Val     int64
 }
 
-func NewTx(address string, val int64) Tx {
+func NewTx() Tx {
 	tx := Tx{}
-	tx.Address = address
-	tx.Val = val
 	return tx
 }
 
-/*
-
-   let transaction_message = jcli
-       .transaction_builder(block0_hash)
-       .build_transaction_from_utxo(
-           &utxo,
-           *utxo.associated_fund(),
-           &sender,
-           *utxo.associated_fund(),
-           &reciever,
-       );
-*/
+func (tx *Tx) BuildFromHash(hash string) {
+}
+func (tx *Tx) SetFromUtxo(utxo *Address, af1 string,
+	sender *Address, af2 string, receiver *Address) {
+}
 
 type Gormangendr struct {
 	Config *Config
@@ -90,12 +97,12 @@ func TwoNodesCommunication() {
 	sender := NewAddress()
 	receiver := NewAddress()
 
-	fmt.Println(sender.Val)
-	fmt.Println(receiver.Val)
+	fmt.Println(sender.Id, sender.Value)
+	fmt.Println(receiver.Id, receiver.Value)
 
-	txs := []Tx{}
-	txs = append(txs, NewTx("FROG", 100))
-	leaderConfig := ConfigWithFunds(txs)
+	adx := []Address{}
+	adx = append(adx, NewAddressWithValue(sender.Id, 100))
+	leaderConfig := ConfigWithFunds(adx)
 	fmt.Println(leaderConfig)
 
 	leaderGormangendr := NewGormangendr()
@@ -106,6 +113,17 @@ func TwoNodesCommunication() {
 	trustedConfig.AddTrustedPeer(leaderGormangendr.TrustedPeer())
 	trustedConfig.BlockHash = leaderConfig.GenesisBlockHash()
 	fmt.Println(trustedConfig)
+	trustedGormangendr := NewGormangendr()
+	trustedGormangendr.Config = trustedConfig
+	go trustedGormangendr.Start()
+
+	utxo := leaderConfig.Block0UtxoForAddress(&sender)
+	block0Hash := trustedConfig.GenesisBlockHash()
+	fmt.Println(utxo, block0Hash)
+
+	tx := NewTx()
+	tx.BuildFromHash(block0Hash)
+	tx.SetFromUtxo(&utxo, utxo.AssociatedFund(), &sender, utxo.AssociatedFund(), &receiver)
 
 	for {
 		time.Sleep(time.Second)
