@@ -18,20 +18,20 @@ func NewAddress() Address {
 	return a
 }
 
-type ConfigurationBuilder struct {
+type Config struct {
 	Txs []Tx
 }
 
-func NewConfigurationBuilder() *ConfigurationBuilder {
-	cb := ConfigurationBuilder{}
+func NewConfig() *Config {
+	cb := Config{}
 	return &cb
 }
 
-func (cb *ConfigurationBuilder) GenesisBlockHash() string {
+func (cb *Config) GenesisBlockHash() string {
 	return "ABC"
 }
-func ConfigurationBuilderWithFunds(txs []Tx) *ConfigurationBuilder {
-	cb := ConfigurationBuilder{}
+func ConfigWithFunds(txs []Tx) *Config {
+	cb := Config{}
 	cb.Txs = txs
 	return &cb
 }
@@ -49,22 +49,33 @@ func NewTx(address string, val int64) Tx {
 }
 
 /*
-  let leader_config = ConfigurationBuilder::new()
-        .with_funds(vec![InitialUTxO {
-            address: sender.address(),
-            value: 100.into(),
-        }])
 
-    let transaction_message = jcli
-        .transaction_builder(block0_hash)
-        .build_transaction_from_utxo(
-            &utxo,
-            *utxo.associated_fund(),
-            &sender,
-            *utxo.associated_fund(),
-            &reciever,
-        );
+   let transaction_message = jcli
+       .transaction_builder(block0_hash)
+       .build_transaction_from_utxo(
+           &utxo,
+           *utxo.associated_fund(),
+           &sender,
+           *utxo.associated_fund(),
+           &reciever,
+       );
 */
+
+type Gormangendr struct {
+	Config *Config
+}
+
+func NewGormangendr() *Gormangendr {
+	g := Gormangendr{}
+	return &g
+}
+
+func (g *Gormangendr) Start() {
+	for {
+		fmt.Println("hi")
+		time.Sleep(time.Second)
+	}
+}
 
 func TwoNodesCommunication() {
 	sender := NewAddress()
@@ -74,9 +85,17 @@ func TwoNodesCommunication() {
 	fmt.Println(receiver.Val)
 
 	txs := []Tx{}
-	txs = append(txs, NewTx("FROG", 123))
-	leaderConfig := ConfigurationBuilderWithFunds(txs)
+	txs = append(txs, NewTx("FROG", 100))
+	leaderConfig := ConfigWithFunds(txs)
 	fmt.Println(leaderConfig)
+
+	leaderGormangendr := NewGormangendr()
+	leaderGormangendr.Config = leaderConfig
+	go leaderGormangendr.Start()
+
+	for {
+		time.Sleep(time.Second)
+	}
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
