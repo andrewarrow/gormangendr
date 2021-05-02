@@ -12,6 +12,6 @@ func NewTx() Tx {
 
 func (tx *Tx) BuildFromHash(hash string) {
 }
-func (tx *Tx) SetFromUtxo(utxo *Address, af1 string,
-	sender *Address, af2 string, receiver *Address) {
+func (tx *Tx) SetFromUtxo(utxo *Address, af1 int64,
+	sender *Wallet, af2 int64, receiver *Wallet) {
 }

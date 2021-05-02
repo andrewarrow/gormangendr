@@ -12,7 +12,7 @@ func NewConfig() *Config {
 	return &c
 }
 
-func (c *Config) Block0UtxoForAddress(sender *Address) Address {
+func (c *Config) Block0UtxoForAddress(sender *Wallet) Address {
 	a := NewAddress()
 	return a
 }

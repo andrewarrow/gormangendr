@@ -24,6 +24,6 @@ func NewAddressWithValue(id string, value int64) Address {
 	return a
 }
 
-func (a *Address) AssociatedFund() string {
-	return "AssociatedFund"
+func (a *Address) AssociatedFund() int64 {
+	return a.Value
 }

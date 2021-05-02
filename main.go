@@ -8,8 +8,8 @@ import (
 )
 
 func TwoNodesCommunication() {
-	sender := money.NewAddress()
-	receiver := money.NewAddress()
+	sender := money.NewWallet()
+	receiver := money.NewWallet()
 
 	fmt.Println(sender.Id, sender.Value)
 	fmt.Println(receiver.Id, receiver.Value)
