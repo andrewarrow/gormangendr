@@ -18,6 +18,45 @@ func NewAddress() Address {
 	return a
 }
 
+type ConfigurationBuilder struct {
+	Txs []string
+}
+
+func NewConfigurationBuilder() *ConfigurationBuilder {
+	cb := ConfigurationBuilder{}
+	return &cb
+}
+
+func (cb *ConfigurationBuilder) GenesisBlockHash() string {
+	return "ABC"
+}
+func ConfigurationBuilderWithFunds(txs []string) *ConfigurationBuilder {
+	cb := ConfigurationBuilder{}
+	cb.Txs = txs
+	return &cb
+}
+
+/*
+
+leader_config.genesis_block_hash()
+
+  let leader_config = ConfigurationBuilder::new()
+        .with_funds(vec![InitialUTxO {
+            address: sender.address(),
+            value: 100.into(),
+        }])
+
+    let transaction_message = jcli
+        .transaction_builder(block0_hash)
+        .build_transaction_from_utxo(
+            &utxo,
+            *utxo.associated_fund(),
+            &sender,
+            *utxo.associated_fund(),
+            &reciever,
+        );
+*/
+
 func TwoNodesCommunication() {
 	sender := NewAddress()
 	receiver := NewAddress()
@@ -25,6 +64,9 @@ func TwoNodesCommunication() {
 	fmt.Println(sender.Val)
 	fmt.Println(receiver.Val)
 
+	txs := []string{}
+	leaderConfig := ConfigurationBuilderWithFunds(txs)
+	fmt.Println(leaderConfig)
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
