@@ -19,21 +19,27 @@ func NewAddress() Address {
 }
 
 type Config struct {
-	Txs []Tx
+	Txs          []Tx
+	TrustedPeers []string
+	BlockHash    string
 }
 
 func NewConfig() *Config {
-	cb := Config{}
-	return &cb
+	c := Config{}
+	c.TrustedPeers = []string{}
+	return &c
 }
 
-func (cb *Config) GenesisBlockHash() string {
+func (c *Config) GenesisBlockHash() string {
 	return "ABC"
 }
+func (c *Config) AddTrustedPeer(tp string) {
+	c.TrustedPeers = append(c.TrustedPeers, tp)
+}
 func ConfigWithFunds(txs []Tx) *Config {
-	cb := Config{}
-	cb.Txs = txs
-	return &cb
+	c := Config{}
+	c.Txs = txs
+	return &c
 }
 
 type Tx struct {
@@ -70,6 +76,9 @@ func NewGormangendr() *Gormangendr {
 	return &g
 }
 
+func (g *Gormangendr) TrustedPeer() string {
+	return "hi"
+}
 func (g *Gormangendr) Start() {
 	for {
 		fmt.Println("hi")
@@ -92,6 +101,11 @@ func TwoNodesCommunication() {
 	leaderGormangendr := NewGormangendr()
 	leaderGormangendr.Config = leaderConfig
 	go leaderGormangendr.Start()
+
+	trustedConfig := NewConfig()
+	trustedConfig.AddTrustedPeer(leaderGormangendr.TrustedPeer())
+	trustedConfig.BlockHash = leaderConfig.GenesisBlockHash()
+	fmt.Println(trustedConfig)
 
 	for {
 		time.Sleep(time.Second)
