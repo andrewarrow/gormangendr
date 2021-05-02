@@ -1,4 +1,5 @@
 gormangendr
+testing/testing
 receiver_*
 vendor
 go.sum
