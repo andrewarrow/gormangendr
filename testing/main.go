@@ -19,7 +19,7 @@ func NewAddress() Address {
 }
 
 type ConfigurationBuilder struct {
-	Txs []string
+	Txs []Tx
 }
 
 func NewConfigurationBuilder() *ConfigurationBuilder {
@@ -30,16 +30,25 @@ func NewConfigurationBuilder() *ConfigurationBuilder {
 func (cb *ConfigurationBuilder) GenesisBlockHash() string {
 	return "ABC"
 }
-func ConfigurationBuilderWithFunds(txs []string) *ConfigurationBuilder {
+func ConfigurationBuilderWithFunds(txs []Tx) *ConfigurationBuilder {
 	cb := ConfigurationBuilder{}
 	cb.Txs = txs
 	return &cb
 }
 
+type Tx struct {
+	Address string
+	Val     int64
+}
+
+func NewTx(address string, val int64) Tx {
+	tx := Tx{}
+	tx.Address = address
+	tx.Val = val
+	return tx
+}
+
 /*
-
-leader_config.genesis_block_hash()
-
   let leader_config = ConfigurationBuilder::new()
         .with_funds(vec![InitialUTxO {
             address: sender.address(),
@@ -64,7 +73,8 @@ func TwoNodesCommunication() {
 	fmt.Println(sender.Val)
 	fmt.Println(receiver.Val)
 
-	txs := []string{}
+	txs := []Tx{}
+	txs = append(txs, NewTx("FROG", 123))
 	leaderConfig := ConfigurationBuilderWithFunds(txs)
 	fmt.Println(leaderConfig)
 }
