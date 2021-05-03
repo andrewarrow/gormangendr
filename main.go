@@ -29,6 +29,7 @@ func TwoNodesCommunication() {
 	fmt.Println(trustedConfig)
 	trustedGormangendr := money.NewGormangendr()
 	trustedGormangendr.Config = trustedConfig
+	trustedGormangendr.Passive = true
 	go trustedGormangendr.Start()
 
 	utxo := leaderConfig.Block0UtxoForAddress(&sender)
