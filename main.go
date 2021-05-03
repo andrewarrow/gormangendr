@@ -1,10 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"gormangendr/money"
+	"gormangendr/network"
+	"log"
 	"math/rand"
 	"time"
+
+	"google.golang.org/grpc"
 )
 
 func TwoNodesCommunication() {
@@ -51,6 +56,18 @@ func TwoNodesCommunication() {
 }
 func main() {
 	rand.Seed(time.Now().UnixNano())
-	fmt.Println("testing...")
-	TwoNodesCommunication()
+
+	conn, err := grpc.Dial("ip:6000", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	nc := network.NewNodeClient(conn)
+	fmt.Println("nc", nc)
+	in := network.HandshakeRequest{}
+	hr, err := nc.Handshake(context.Background(), &in)
+	fmt.Println("nc", hr, err)
+
+	//TwoNodesCommunication()
 }
